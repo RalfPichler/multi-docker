@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t pira/react-test -f ./client/Dockerfile.dev
+
+script: 
+  - docker run pira/react-test npm test -- --coverage
+
+after_success: 
+  - docker build -t pira/multi-client ./client
+  - docker build -t pira/multi-nginx ./nginx
+  - docker build -t pira/multi-server ./server
+  - docker build -t pira/multi-worker ./worker
+
+  # Log in to the docker CI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password_stdin
+  # Take those images and push them to docker hub
+  - docker push pira/multi-client
+  - docker push pira/multi-nginx
+  - docker push pira/multi-server
+  - docker push pira/multi-worker
