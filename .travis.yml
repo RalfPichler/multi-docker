@@ -15,7 +15,7 @@ after_success:
   - docker build -t pira/multi-worker ./worker
 
   # Log in to the docker CI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password_stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin docker.io
   # Take those images and push them to docker hub
   - docker push pira/multi-client
   - docker push pira/multi-nginx
